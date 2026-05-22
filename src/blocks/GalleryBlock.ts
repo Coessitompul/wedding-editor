@@ -16,6 +16,9 @@ export const registerGalleryBlock = (editor: Editor): void => {
         padding: 60px 20px;
         font-family: Georgia, serif;
         text-align: center;
+        position: absolute;
+        top: 50px;
+        left: 50px;
       ">
         <p style="
           font-size: 11px;

@@ -39,7 +39,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: cat,
     select: true,
     media: SVG.column1,
-    content: `<div ${R}><div ${C}></div></div>${GRID_STYLE}`,
+    content: `<div ${R} style="position:absolute;top:50px;left:50px;"><div ${C}></div></div>${GRID_STYLE}`,
   });
 
   bm.add('column2', {
@@ -47,7 +47,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.column2,
-    content: `<div ${R}><div ${C}></div><div ${C}></div></div>${GRID_STYLE}`,
+    content: `<div ${R} style="position:absolute;top:50px;left:50px;"><div ${C}></div><div ${C}></div></div>${GRID_STYLE}`,
   });
 
   bm.add('column3', {
@@ -55,7 +55,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.column3,
-    content: `<div ${R}><div ${C}></div><div ${C}></div><div ${C}></div></div>${GRID_STYLE}`,
+    content: `<div ${R} style="position:absolute;top:50px;left:50px;"><div ${C}></div><div ${C}></div><div ${C}></div></div>${GRID_STYLE}`,
   });
 
   bm.add('column3-7', {
@@ -63,7 +63,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.column37,
-    content: `<div ${R}><div ${C30}></div><div ${C70}></div></div>${GRID_STYLE}`,
+    content: `<div ${R} style="position:absolute;top:50px;left:50px;"><div ${C30}></div><div ${C70}></div></div>${GRID_STYLE}`,
   });
 
   bm.add('section', {
@@ -71,7 +71,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.section,
-    content: `<section style="padding:40px 20px;min-height:100px;"></section>`,
+    content: `<section style="padding:40px 20px;min-height:100px;position:absolute;top:50px;left:50px;"></section>`,
   });
 
   bm.add('divider', {
@@ -79,7 +79,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.divider,
-    content: `<hr style="border:none;border-top:2px solid currentColor;margin:20px 0;opacity:0.25;">`,
+    content: `<hr style="border:none;border-top:2px solid currentColor;margin:20px 0;opacity:0.25;position:absolute;top:50px;left:50px;">`,
   });
 
   bm.add('heading', {
@@ -88,7 +88,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     select: true,
     activate: true,
     media: SVG.heading,
-    content: { type: 'text', tagName: 'h1', content: 'Your Heading', style: { margin: '0', padding: '5px 0', 'font-size': '2em' } },
+    content: { type: 'text', tagName: 'h1', content: 'Your Heading', style: { margin: '0', padding: '5px 0', 'font-size': '2em', position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('text', {
@@ -97,7 +97,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     select: true,
     activate: true,
     media: SVG.text,
-    content: { type: 'text', content: 'Insert your text here', style: { margin: '0', padding: '5px 0' } },
+    content: { type: 'text', content: 'Insert your text here', style: { margin: '0', padding: '5px 0', position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('link', {
@@ -105,7 +105,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.link,
-    content: { type: 'link', content: 'Link Text', style: { color: '#d983a6' } },
+    content: { type: 'link', content: 'Link Text', style: { color: '#d983a6', position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('link-box', {
@@ -113,7 +113,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.linkBox,
-    content: `<a href="#" style="display:block;padding:20px;border:2px solid rgba(255,255,255,0.2);text-decoration:none;color:inherit;text-align:center;border-radius:4px;min-height:80px;"></a>`,
+    content: `<a href="#" style="display:block;padding:20px;border:2px solid rgba(255,255,255,0.2);text-decoration:none;color:inherit;text-align:center;border-radius:4px;min-height:80px;position:absolute;top:50px;left:50px;"></a>`,
   });
 
   bm.add('image', {
@@ -122,7 +122,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     select: true,
     activate: true,
     media: SVG.image,
-    content: { type: 'image', style: { color: 'black', display: 'block', 'max-width': '100%', height: 'auto' } },
+    content: { type: 'image', style: { color: 'black', display: 'block', 'max-width': '100%', height: 'auto', position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('image-box', {
@@ -130,7 +130,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.imageBox,
-    content: `<figure style="margin:0;padding:0;"><img src="" alt="Image" style="display:block;width:100%;max-height:300px;object-fit:cover;"><figcaption style="padding:8px 0;font-size:14px;text-align:center;">Image caption</figcaption></figure>`,
+    content: `<figure style="margin:0;padding:0;position:absolute;top:50px;left:50px;"><img src="" alt="Image" style="display:block;width:100%;max-height:300px;object-fit:cover;"><figcaption style="padding:8px 0;font-size:14px;text-align:center;">Image caption</figcaption></figure>`,
   });
 
   bm.add('video', {
@@ -138,7 +138,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.video,
-    content: { type: 'video', src: '', style: { height: '350px', 'max-width': '100%', margin: '0 auto', display: 'block' } },
+    content: { type: 'video', src: '', style: { height: '350px', 'max-width': '100%', margin: '0 auto', display: 'block', position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('map', {
@@ -146,7 +146,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.map,
-    content: { type: 'map', style: { height: '350px', width: '100%' } },
+    content: { type: 'map', style: { height: '350px', width: '100%', position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('icon', {
@@ -154,7 +154,7 @@ export const registerBasicBlocks = (editor: Editor): void => {
     category: catId,
     select: true,
     media: SVG.icon,
-    content: `<div style="display:inline-flex;align-items:center;justify-content:center;padding:10px;"><svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 9.5 8.26 3 9.27l4.5 4.38L6.18 20 12 17.27 17.82 20 16.5 13.65 21 9.27l-6.5-1.01L12 2z"/></svg></div>`,
+    content: `<div style="display:inline-flex;align-items:center;justify-content:center;padding:10px;position:absolute;top:50px;left:50px;"><svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 9.5 8.26 3 9.27l4.5 4.38L6.18 20 12 17.27 17.82 20 16.5 13.65 21 9.27l-6.5-1.01L12 2z"/></svg></div>`,
   });
 
   bm.add('music', {
@@ -173,6 +173,9 @@ export const registerBasicBlocks = (editor: Editor): void => {
         width: 100%;
         box-sizing: border-box;
         font-family: sans-serif;
+        position: absolute;
+        top: 50px;
+        left: 50px;
       ">
         <button onclick="(function(btn){
           var p = btn.closest('.wb-music-player').querySelector('audio');

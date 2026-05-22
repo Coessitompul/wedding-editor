@@ -65,3 +65,9 @@ export function readFileAsDataUrl(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
+
+// Shared drag state: diset saat thumbnail di-drag dari uploads panel
+export let currentDragItem: MediaItem | null = null;
+export const setCurrentDragItem = (item: MediaItem | null): void => {
+  currentDragItem = item;
+};

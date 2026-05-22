@@ -21,8 +21,9 @@ export const registerHeroBlock = (editor: Editor): void => {
         align-items: center;
         justify-content: center;
         font-family: Georgia, serif;
-        position: relative;
-        overflow: hidden;
+        position: absolute;
+        top: 50px;
+        left: 50px;
       ">
         <p style="
           font-size: 13px;

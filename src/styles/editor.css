@@ -613,6 +613,22 @@
   color: var(--ws-text);
 }
 
+/* Delete selected button (merah, muncul hanya saat ada element terpilih) */
+.ws-btn-delete {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #c0392b;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ws-btn-delete:hover {
+  background: #a93226;
+}
+
 /* Publish button (purple, prominent) */
 .ws-publish-btn {
   padding: 6px 16px;
@@ -1016,32 +1032,74 @@
   outline: 2px solid var(--ws-accent) !important;
 }
 
-/* GrapesJS toolbar (floating edit toolbar) */
+/* GrapesJS toolbar — dark theme, minimal Canva-like */
 .gjs-toolbar {
-  background: var(--ws-bg-1) !important;
-  border-radius: 5px !important;
-  border: 1px solid var(--ws-border-light) !important;
+  background: #1a1a1a !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.6) !important;
+  display: flex !important;
+  gap: 0 !important;
+  pointer-events: auto !important;
 }
+
 .gjs-toolbar-item {
-  color: var(--ws-text) !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  color: #999 !important;
+  transition: background 0.12s, color 0.12s !important;
 }
 .gjs-toolbar-item:hover {
-  background: var(--ws-bg-hover) !important;
-}
-
-/* GrapesJS badge (component type label) */
-.gjs-badge {
-  background: var(--ws-accent) !important;
+  background: rgba(255,255,255,0.08) !important;
   color: #fff !important;
-  font-size: 10px !important;
-  border-radius: 3px !important;
+}
+/* drag handle */
+.gjs-toolbar-item:first-child {
+  cursor: grab !important;
+  color: #7c4dff !important;
+}
+.gjs-toolbar-item:first-child:active {
+  cursor: grabbing !important;
+}
+/* delete button */
+.gjs-toolbar-item:last-child:hover {
+  background: rgba(200,50,50,0.25) !important;
+  color: #ff6b6b !important;
 }
 
-/* GrapesJS resize handles */
-.gjs-resizer-h {
-  background: var(--ws-accent) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+/* GrapesJS badge — hidden */
+.gjs-badge {
+  display: none !important;
 }
+
+/* ── Canva-like resize handles ──────────────────────────────────── */
+.gjs-resizer-h {
+  width: 9px !important;
+  height: 9px !important;
+  background: #fff !important;
+  border: 2px solid #7c4dff !important;
+  border-radius: 2px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35) !important;
+}
+.gjs-resizer-h:hover {
+  background: #ede7ff !important;
+}
+
+/* Directional cursors per handle */
+.gjs-resizer-h-tl { cursor: nwse-resize !important; }
+.gjs-resizer-h-tc { cursor: ns-resize   !important; }
+.gjs-resizer-h-tr { cursor: nesw-resize !important; }
+.gjs-resizer-h-cl { cursor: ew-resize   !important; }
+.gjs-resizer-h-cr { cursor: ew-resize   !important; }
+.gjs-resizer-h-bl { cursor: nesw-resize !important; }
+.gjs-resizer-h-bc { cursor: ns-resize   !important; }
+.gjs-resizer-h-br { cursor: nwse-resize !important; }
 
 /* GrapesJS modal (Asset Manager, Code Editor) */
 .gjs-mdl-dialog {

@@ -15,6 +15,9 @@ export const registerCountdownBlock = (editor: Editor): void => {
         text-align: center;
         color: #ffffff;
         font-family: Georgia, serif;
+        position: absolute;
+        top: 50px;
+        left: 50px;
       ">
         <p style="
           font-size: 11px;

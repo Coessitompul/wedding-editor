@@ -11,6 +11,16 @@ export const getEditorConfig = (options: EditorConfigOptions = {}): Partial<Edit
   return {
     fromElement: false,
     plugins: editorPlugins,
+    dragMode: 'absolute',
+    canvasCss: `
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 0; min-height: 100vh; height: auto; overflow-y: auto; overflow-x: hidden; }
+      [data-gjs-type] { position: absolute !important; max-width: 100%; }
+      [data-gjs-type]:not([data-gjs-type="wrapper"]) { cursor: grab; }
+      [data-gjs-type="wrapper"] { position: relative !important; min-height: 100vh !important; width: 100% !important; max-width: none !important; cursor: default; }
+      .gjs-selected { outline: 2px solid #7c4dff !important; outline-offset: 2px; }
+      .gjs-hovered:not(.gjs-selected) { outline: 1px dashed rgba(124,77,255,0.55) !important; outline-offset: 2px; }
+    `,
 
     // Storage Manager: autosave ke localStorage jika storageKey disediakan
     storageManager: storageKey
@@ -83,13 +93,11 @@ export const getEditorConfig = (options: EditorConfigOptions = {}): Partial<Edit
       appendTo: '#gjs-traits',
     },
 
-    // Device Manager: Mobile (default) / Tablet / Desktop
+    // Device Manager: hanya Mobile
     deviceManager: {
       default: 'Mobile',
       devices: [
-        { id: 'Desktop', name: 'Desktop', width: '' },
-        { id: 'Tablet',  name: 'Tablet',  width: '768px', widthMedia: '768px' },
-        { id: 'Mobile',  name: 'Mobile',  width: '400px', widthMedia: '' },
+        { id: 'Mobile', name: 'Mobile', width: '400px', widthMedia: '' },
       ],
     },
 

@@ -21,55 +21,55 @@ export const registerFormBlocks = (editor: Editor): void => {
     label: 'Form',
     category: cat,
     media: SVG.form,
-    content: { type: 'form' },
+    content: { type: 'form', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('input', {
     label: 'Input',
     category: catId,
     media: SVG.input,
-    content: { type: 'input' },
+    content: { type: 'input', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('textarea', {
     label: 'Textarea',
     category: catId,
     media: SVG.textarea,
-    content: { type: 'textarea' },
+    content: { type: 'textarea', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('select', {
     label: 'Select',
     category: catId,
     media: SVG.select,
-    content: { type: 'select' },
+    content: { type: 'select', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('button', {
     label: 'Button',
     category: catId,
     media: SVG.button,
-    content: { type: 'button' },
+    content: { type: 'button', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('label', {
     label: 'Label',
     category: catId,
     media: SVG.label,
-    content: { type: 'label' },
+    content: { type: 'label', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('checkbox', {
     label: 'Checkbox',
     category: catId,
     media: SVG.checkbox,
-    content: { type: 'checkbox' },
+    content: { type: 'checkbox', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 
   bm.add('radio', {
     label: 'Radio',
     category: catId,
     media: SVG.radio,
-    content: { type: 'radio' },
+    content: { type: 'radio', style: { position: 'absolute', top: '50px', left: '50px' } },
   });
 };

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import type { MediaItem } from './mediaDb';
-import { deleteMedia, getAllMedia, readFileAsDataUrl, saveMedia } from './mediaDb';
+import { deleteMedia, getAllMedia, readFileAsDataUrl, saveMedia, setCurrentDragItem } from './mediaDb';
 
 type MediaTab = 'image' | 'video' | 'audio';
 
@@ -234,11 +234,19 @@ export function UploadsPanel({ onInsert }: UploadsPanelProps) {
             <div
               key={item.id}
               className="ws-media-thumb"
+              draggable={true}
+              onDragStart={(e) => {
+                setCurrentDragItem(item);
+                e.dataTransfer.setData('application/x-ws-studio', 'media');
+                e.dataTransfer.effectAllowed = 'copy';
+                e.dataTransfer.setDragImage(e.currentTarget as HTMLElement, 40, 40);
+              }}
+              onDragEnd={() => setCurrentDragItem(null)}
               onClick={() => onInsert(item)}
-              title={`Klik untuk memasukkan: ${item.name}`}
+              title={`Seret ke canvas atau klik untuk memasukkan: ${item.name}`}
             >
               {item.type === 'image' ? (
-                <img src={item.dataUrl} alt={item.name} className="ws-media-thumb__img" loading="lazy" />
+                <img src={item.dataUrl} alt={item.name} className="ws-media-thumb__img" loading="lazy" draggable={false} />
               ) : (
                 <div className="ws-media-thumb__video-wrap">
                   <video src={item.dataUrl} className="ws-media-thumb__img" />
