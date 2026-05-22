@@ -17,9 +17,10 @@ export const getEditorConfig = (options: EditorConfigOptions = {}): Partial<Edit
       body { margin: 0; padding: 0; min-height: 100vh; height: auto; overflow-y: auto; overflow-x: hidden; }
       [data-gjs-type] { position: absolute !important; max-width: 100%; }
       [data-gjs-type]:not([data-gjs-type="wrapper"]) { cursor: grab; }
-      [data-gjs-type="wrapper"] { position: relative !important; min-height: 100vh !important; width: 100% !important; max-width: none !important; cursor: default; }
+      [data-gjs-type="wrapper"] { position: relative !important; min-height: 100vh !important; width: 100% !important; max-width: none !important; cursor: default; outline: none !important; }
       .gjs-selected { outline: 2px solid #7c4dff !important; outline-offset: 2px; }
       .gjs-hovered:not(.gjs-selected) { outline: 1px dashed rgba(124,77,255,0.55) !important; outline-offset: 2px; }
+      [data-gjs-type="wrapper"].gjs-selected, [data-gjs-type="wrapper"].gjs-hovered { outline: none !important; }
     `,
 
     // Storage Manager: autosave ke localStorage jika storageKey disediakan

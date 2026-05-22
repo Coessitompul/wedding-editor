@@ -655,8 +655,7 @@
 
 /* GrapesJS internal elements need to fill the container */
 .ws-canvas .gjs-editor,
-.ws-canvas .gjs-editor-cont,
-.ws-canvas .gjs-cv-canvas {
+.ws-canvas .gjs-editor-cont {
   height: 100% !important;
   width: 100% !important;
   border: none !important;
@@ -1016,6 +1015,18 @@
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
+}
+
+/* Mobile 400px frame — visually isolated with shadow */
+.ws-canvas .gjs-frame-wrapper {
+  box-shadow: 0 4px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06) !important;
+  border-radius: 2px !important;
+  overflow: visible !important;
+}
+
+.ws-canvas .gjs-frame {
+  border: none !important;
+  display: block !important;
 }
 
 /* Remove GrapesJS default borders and backgrounds */

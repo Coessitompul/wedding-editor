@@ -121,11 +121,20 @@ export default function GrapesEditor({
       }
     });
 
-    // Pastikan wrapper selalu droppable dan punya reference frame yang benar
+    // Wrapper = "halaman" — hanya droppable sebelum load
     const wrapper = editor.getWrapper();
     if (wrapper) {
-      wrapper.set({ droppable: true });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (wrapper as any).set('droppable', true);
     }
+
+    // Guard: jika wrapper somehow ter-select, langsung deselect
+    editor.on('component:selected', (comp: import('grapesjs').Component) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((comp as any).get?.('type') === 'wrapper') {
+        editor.select(undefined);
+      }
+    });
 
     // Semua setup canvas dilakukan setelah iframe siap
     editor.on('load', () => {
@@ -133,6 +142,17 @@ export default function GrapesEditor({
         (editor.Canvas as unknown as { getDocument?: () => Document }).getDocument?.() ??
         editor.Canvas.getFrameEl()?.contentDocument;
       if (!frameDoc) return;
+
+      // Pastikan wrapper non-selectable setelah editor selesai load (timing-safe)
+      {
+        const w = editor.getWrapper();
+        if (w) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (w as any).set('selectable', false);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (w as any).set('hoverable', false);
+        }
+      }
 
       // ── 1. Drop gambar dari uploads panel (capture phase agar mendahului GrapesJS) ──
       frameDoc.addEventListener('dragover', (e: DragEvent) => {
@@ -216,92 +236,73 @@ export default function GrapesEditor({
           });
         }, false);
 
-        // ── Bounds clamping — real-time via MutationObserver ──
-        // GrapesJS Resizer memanipulasi el.style langsung saat drag resize,
-        // sehingga component:update saja tidak cukup. MutationObserver menangkap
-        // perubahan DOM secara real-time dan langsung mengoreksinya.
-        const CLAMP_W = 400;
-        const MIN_EL = 20;
-        let domClamping = false;
-        const FrameMO = (frameDoc.defaultView as Window & typeof globalThis).MutationObserver;
-        const boundsObserver = new FrameMO((mutations) => {
-          if (domClamping) return;
-          domClamping = true;
-          for (const mut of mutations) {
-            if (mut.type !== 'attributes') continue;
-            const el = mut.target as HTMLElement;
-            if (el === wrapperEl || !el.style?.left) continue;
-            const left = parseFloat(el.style.left) || 0;
-            const top  = parseFloat(el.style.top)  || 0;
-            const width = parseFloat(el.style.width) || 0;
-            // Pertahankan right edge, clamp left >= 0 dan right <= CLAMP_W
-            const rightEdge  = Math.min(left + width, CLAMP_W);
-            const newLeft    = Math.max(0, left);
-            const newTop     = Math.max(0, top);
-            const newWidth   = width > 0 ? Math.max(MIN_EL, rightEdge - newLeft) : 0;
-            if (Math.abs(newLeft  - left)  > 0.5) el.style.left  = `${Math.round(newLeft)}px`;
-            if (Math.abs(newTop   - top)   > 0.5) el.style.top   = `${Math.round(newTop)}px`;
-            if (newWidth > 0 && Math.abs(newWidth - width) > 0.5) el.style.width = `${Math.round(newWidth)}px`;
-          }
-          domClamping = false;
-        });
-        boundsObserver.observe(wrapperEl, { subtree: true, attributes: true, attributeFilter: ['style'] });
-
         // ── 2b. Direct element drag (Canva-like) ──
-        // Bubble phase: GrapesJS selection jalan dulu, baru kita setup drag state
-        // Capture phase untuk pointermove: intercept sebelum GrapesJS hover effects
+        // gjsHandling = true saat GrapesJS sedang resize/move via handle/toolbar di main doc.
+        // Ini lebih reliable daripada elementFromPoint karena tidak tergantung posisi kursor.
         {
           let dragComp: import('grapesjs').Component | null = null;
           let dragEl: HTMLElement | null = null;
           let dragSX = 0, dragSY = 0;
           let dragIL = 0, dragIT = 0;
           let dragActive = false;
+          let gjsHandling = false;
+
+          const resetDrag = () => { dragComp = null; dragEl = null; dragActive = false; };
+
+          // Deteksi GrapesJS resize / toolbar-drag dari main document
+          const onMainDown = (ev: PointerEvent) => {
+            const t = ev.target as HTMLElement;
+            if (t.classList.contains('gjs-resizer-h') || t.closest?.('.gjs-toolbar')) {
+              gjsHandling = true;
+              resetDrag();
+            }
+          };
+          const onMainUp = () => { gjsHandling = false; };
+          document.addEventListener('pointerdown', onMainDown, true);
+          document.addEventListener('pointerup',   onMainUp,   true);
 
           frameDoc.addEventListener('pointerdown', (e: PointerEvent) => {
-            if (e.button !== 0) return;
-            const target = e.target as HTMLElement;
-            if (target.classList.contains('gjs-resizer-h')) return;
+            if (e.button !== 0 || gjsHandling) return;
             const comp = editor.getSelected();
             if (!comp) return;
             const el = comp.getEl();
+            const target = e.target as HTMLElement;
             if (!el || (!el.contains(target) && el !== target)) return;
             dragComp   = comp;
             dragEl     = el;
-            dragSX     = e.clientX;
-            dragSY     = e.clientY;
             dragIL     = parseFloat(el.style.left) || 0;
             dragIT     = parseFloat(el.style.top)  || 0;
+            dragSX     = e.clientX + (frameDoc.defaultView?.scrollX ?? 0);
+            dragSY     = e.clientY + (frameDoc.defaultView?.scrollY ?? 0);
             dragActive = false;
           }, false);
 
           frameDoc.addEventListener('pointermove', (e: PointerEvent) => {
-            if (!dragEl || !dragComp || !(e.buttons & 1)) {
-              if (dragActive) { dragComp = null; dragEl = null; dragActive = false; }
+            if (gjsHandling || !dragEl || !dragComp || !(e.buttons & 1)) {
+              if (dragActive) resetDrag();
               return;
             }
-            const dx = e.clientX - dragSX;
-            const dy = e.clientY - dragSY;
+            const absX = e.clientX + (frameDoc.defaultView?.scrollX ?? 0);
+            const absY = e.clientY + (frameDoc.defaultView?.scrollY ?? 0);
+            const dx = absX - dragSX;
+            const dy = absY - dragSY;
             if (!dragActive && Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
             dragActive = true;
             e.stopPropagation();
             e.preventDefault();
-            dragEl.style.left = `${Math.round(Math.max(0, dragIL + dx))}px`;
-            dragEl.style.top  = `${Math.round(Math.max(0, dragIT + dy))}px`;
+            dragEl.style.left = `${Math.round(dragIL + dx)}px`;
+            dragEl.style.top  = `${Math.round(dragIT + dy)}px`;
           }, true);
 
           frameDoc.addEventListener('pointerup', () => {
-            if (!dragEl || !dragComp || !dragActive) {
-              dragComp = null; dragEl = null; dragActive = false; return;
-            }
+            if (!dragEl || !dragComp || !dragActive) { resetDrag(); return; }
             const newLeft = parseFloat(dragEl.style.left) || 0;
             const newTop  = parseFloat(dragEl.style.top)  || 0;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const style = (dragComp as any).getStyle() as Record<string, string>;
-            isClamping = true;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (dragComp as any).setStyle({ ...style, left: `${newLeft}px`, top: `${newTop}px` });
-            isClamping = false;
-            dragComp = null; dragEl = null; dragActive = false;
+            resetDrag();
           }, true);
         }
       }
@@ -321,51 +322,6 @@ export default function GrapesEditor({
     });
     editor.on('component:deselected', () => {
       setSelectedCount(((editor as unknown as { getSelectedAll: () => unknown[] }).getSelectedAll?.() ?? []).length);
-    });
-
-    // ── 5. Bounds clamping — sinkronisasi model GrapesJS setelah resize/drag selesai ──
-    // MutationObserver (di atas) menangani DOM real-time. Handler ini memastikan
-    // nilai model GrapesJS juga ter-update dengan benar setelah perubahan di-commit.
-    const CANVAS_W = 400;
-    const MIN_W = 20;
-    let isClamping = false;
-
-    const clampToBounds = (comp: import('grapesjs').Component) => {
-      if (isClamping) return;
-      if ((comp as unknown as { get: (k: string) => string }).get?.('type') === 'wrapper') return;
-
-      const style = comp.getStyle() as Record<string, string>;
-      if (!style.left && !style.top) return;
-
-      const left  = parseFloat(style.left  ?? '0') || 0;
-      const top   = parseFloat(style.top   ?? '0') || 0;
-      const width = parseFloat(style.width ?? '0') || 0;
-
-      // Pertahankan right edge — sama dengan formula MutationObserver di atas
-      const rightEdge = Math.min(left + width, CANVAS_W);
-      const newLeft   = Math.max(0, left);
-      const newTop    = Math.max(0, top);
-      const newWidth  = width > 0 ? Math.max(MIN_W, rightEdge - newLeft) : 0;
-
-      const needsUpdate =
-        Math.abs(newLeft - left) > 0.5 ||
-        Math.abs(newTop  - top)  > 0.5 ||
-        (newWidth > 0 && Math.abs(newWidth - width) > 0.5);
-
-      if (needsUpdate) {
-        isClamping = true;
-        comp.setStyle({
-          ...style,
-          left: `${Math.round(newLeft)}px`,
-          top:  `${Math.round(newTop)}px`,
-          ...(newWidth > 0 ? { width: `${Math.round(newWidth)}px` } : {}),
-        });
-        isClamping = false;
-      }
-    };
-
-    editor.on('component:update', (comp: import('grapesjs').Component) => {
-      clampToBounds(comp);
     });
 
     if (initialHtml) {
