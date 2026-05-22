@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:5174/)",
+      "Bash(npx playwright *)",
+      "Bash(node -e \"const p = require\\('c:/PEMROGRAMAN/docker/wedding-web/wedding-web-creators/wedding-studio/node_modules/grapesjs-blocks-basic/dist/index.js'\\); console.log\\(typeof p, typeof p.default\\);\")",
+      "Bash(npm run *)",
+      "Bash(node -e \"const css = require\\('fs'\\).readFileSync\\('c:/PEMROGRAMAN/docker/wedding-web/wedding-web-creators/wedding-studio/node_modules/grapesjs/dist/css/grapes.min.css','utf8'\\); const match = css.match\\(/[^}]*blocks-c[^}]*}/g\\); console.log\\(match?.join\\('\\\\n'\\)\\);\")",
+      "Bash(node -e \"const css = require\\('fs'\\).readFileSync\\('c:/PEMROGRAMAN/docker/wedding-web/wedding-web-creators/wedding-studio/node_modules/grapesjs/dist/css/grapes.min.css','utf8'\\); const matches = css.match\\(/[^}]*\\(?:sm-sector|layer-item|sm-properties\\)[^}]*}/g\\); console.log\\(matches?.join\\('\\\\n'\\)\\);\")",
+      "Bash(node -e \"const css = require\\('fs'\\).readFileSync\\('c:/PEMROGRAMAN/docker/wedding-web/wedding-web-creators/wedding-studio/node_modules/grapesjs/dist/css/grapes.min.css','utf8'\\); const matches = css.match\\(/[^}]*caret[^}]*}/g\\); console.log\\(matches?.join\\('\\\\n'\\)\\);\")",
+      "Bash(node -e \"const css = require\\('fs'\\).readFileSync\\('c:/PEMROGRAMAN/docker/wedding-web/wedding-web-creators/wedding-studio/node_modules/grapesjs/dist/css/grapes.min.css','utf8'\\); const fa = css.match\\(/@font-face[^}]*font-family[^}]*fa[^}]*/gi\\); console.log\\(fa?.[0]?.substring\\(0,300\\) ?? 'no FA font'\\);\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(npx tsc *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\PEMROGRAMAN\\\\docker\\\\wedding-web\\\\wedding-web-creators\\\\wedding-studio\\\\src\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)"
+    ]
+  }
+}
